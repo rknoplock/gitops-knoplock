@@ -1,36 +1,31 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: nginx
+  name: podinfo
   namespace: argocd
 spec:
   project: default
   source:
     repoURL: https://github.com/rknoplock/gitops-knoplock.git
     targetRevision: main
-    path: charts/nginx
+    path: charts/podinfo
     helm:
       parameters:
         - name: replicaCount
           value: "1"
         - name: image.tag
-          value: "1.27"
+          value: "6.7.0"
       values: |-
-        image:
-          repository: nginx
-        service:
-          type: ClusterIP
-          port: 80
         resources:
           limits:
             cpu: 200m
-            memory: 256Mi
+            memory: 128Mi
           requests:
             cpu: 100m
-            memory: 128Mi
+            memory: 64Mi
   destination:
     server: https://kubernetes.default.svc
-    namespace: nginx
+    namespace: podinfo
   syncPolicy:
     automated:
       prune: true
