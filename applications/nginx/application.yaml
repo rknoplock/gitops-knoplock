@@ -12,7 +12,7 @@ spec:
 
     targetRevision: HEAD
 
-    path: charts/ngnix
+    path: charts/nginx
 
     helm:
       valueFiles:
