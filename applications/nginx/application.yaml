@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+
+metadata:
+  name: nginx
+
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/rknoplock/gitops-knoplock.git
+
+    targetRevision: HEAD
+
+    path: charts/ngnix
+
+    helm:
+      valueFiles:
+        - ../../applications/nginx/values.yaml
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: nginx
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+
+    syncOptions:
+      - CreateNamespace=true
