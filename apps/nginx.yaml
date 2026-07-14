@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nginx-dev
+  namespace: argocd
+spec:
+  project: default
+  sources:
+    - repoURL: https://github.com/rknoplock/gitops-knoplock.git
+      targetRevision: main
+      path: charts/nginx
+      helm:
+        valueFiles:
+          - $values/environments/dev/nginx-values.yaml
+    - repoURL: https://github.com/rknoplock/gitops-knoplock.git
+      targetRevision: main
+      ref: values
+      path: environments/dev
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: nginx-dev
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
